@@ -4,6 +4,10 @@ adb-utils
 
 adb-utils provides a simple easily extendable JavaFX gui to use with logcat via adb
 
+![Screenshot demo](https://drive.google.com/file/d/0Bxpqq2lDoI78NnBGRUxRMW53QzQ/view?usp=sharing)
+
+
+
 
 Features
 --------
