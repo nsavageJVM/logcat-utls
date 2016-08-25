@@ -5,104 +5,162 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox fx:id="mainContainer"  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" spacing="0"
+<VBox fx:id="mainContainer" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" spacing="0"
       fx:controller="com.fishbeans.app.ui.controllers.BasePanelController">
 
     <fx:define>
-        <Double fx:id="BTN_WIDTH" fx:value="110"/>
+        <!-- style="${DEBUG_NODE_STYLE}" -->
+        <String fx:id="DEBUG_NODE_STYLE"
+                fx:value="-fx-border-color:black; -fx-border-width: 3; -fx-border-style: dotted;"/>
+        <Double fx:id="BTN_WIDTH" fx:value="130"/>
         <Double fx:id="BTN_HEIGHT" fx:value="30"/>
-        <Double fx:id="SMALL_BTN_WIDTH" fx:value="70"/>
+        <Double fx:id="SMALL_BTN_WIDTH" fx:value="100"/>
         <Double fx:id="FILTER_FIELD_HEIGHT" fx:value="30"/>
-        <Double fx:id="FILTER_FIELD_WIDTH" fx:value="210"/>
-        <Double fx:id="HEADER_HEIGHT" fx:value="60"/>
+        <Double fx:id="FILTER_FIELD_WIDTH" fx:value="320"/>
+        <Double fx:id="HEADER_HEIGHT" fx:value="90"/>
+        <Double fx:id="HEADER_ROW_HEIGHT" fx:value="40"/>
         <Double fx:id="HEADER_WIDTH" fx:value="1000"/>
         <Double fx:id="DEVICE_COMBO_HEIGHT" fx:value="30"/>
-        <Double fx:id="DEVICE_COMBO_WIDTH" fx:value="152"/>
+        <Double fx:id="DEVICE_COMBO_WIDTH" fx:value="162"/>
         <Double fx:id="LOG_LEVEL_COMBO_HEIGHT" fx:value="30"/>
-        <Double fx:id="LOG_LEVEL_COMBO_WIDTH" fx:value="100"/>
+        <Double fx:id="LOG_LEVEL_COMBO_WIDTH" fx:value="90"/>
         <ToggleGroup fx:id="screenToggle"/>
     </fx:define>
 
-    <HBox minHeight="$HEADER_HEIGHT" minWidth="$HEADER_WIDTH" prefHeight="$HEADER_HEIGHT" prefWidth="$HEADER_WIDTH"
-          maxHeight="$HEADER_HEIGHT" maxWidth="1.0E8" VBox.vgrow="NEVER" alignment="TOP_LEFT">
+    <HBox minWidth="${mainContainer.width/1.1}" prefWidth="${mainContainer.width/1.1}"
+          maxWidth="${mainContainer.width/1.1}"
+          minHeight="$HEADER_HEIGHT" prefHeight="$HEADER_HEIGHT" maxHeight="$HEADER_HEIGHT"
+          VBox.vgrow="NEVER" alignment="TOP_LEFT">
 
-        <Button text="Run Logcat" onAction="#runLogCat" alignment="TOP_LEFT"
-                minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT">
-            <HBox.margin>
-                <Insets top="10.0" right="4.0" bottom="4.0" left="10.0"/>
-            </HBox.margin>
-        </Button>
+        <GridPane fx:id="topPane" VBox.vgrow="NEVER"
+                  alignment="TOP_LEFT" gridLinesVisible="false" styleClass="container"
+                  minWidth="${mainContainer.width/1.12}" prefWidth="${mainContainer.width/1.12}"
+                  maxWidth="${mainContainer.width/1.12}">
+            <!-- row 1    -->
+            <Button text="Run Logcat" onAction="#runLogCat" alignment="TOP_LEFT"
+                    minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT"
+                    GridPane.rowIndex="0" GridPane.columnIndex="0">
+                <GridPane.margin>
+                    <Insets top="4.0" right="4.0" bottom="4.0" left="0.0"/>
+                </GridPane.margin>
+            </Button>
+            <Button text="Stop  Logcat" onAction="#stopLogCat" alignment="TOP_LEFT"   GridPane.halignment="RIGHT"
+                    minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT"
+                    maxHeight="$BTN_HEIGHT"  GridPane.rowIndex="0" GridPane.columnIndex="1">
+                <GridPane.margin>
+                    <Insets top="4.0" right="10.0" bottom="4.0" left="10.0"/>
+                </GridPane.margin>
+            </Button>
+            <Button text="ReStart  Logcat" onAction="#restartLogCat" alignment="TOP_LEFT"
+                    minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT"
+                    maxHeight="$BTN_HEIGHT"  GridPane.rowIndex="0" GridPane.columnIndex="2">
+                <GridPane.margin>
+                    <Insets top="4.0" right="4.0" bottom="4.0" left="10.0"/>
+                </GridPane.margin>
+            </Button>
 
-        <Label  text="Enter Filter" minHeight="30" maxHeight="30">
+
+            <ComboBox fx:id="selectDeviceCombo" promptText="Select Device"
+                      minWidth="$DEVICE_COMBO_WIDTH"
+                      prefWidth="$DEVICE_COMBO_WIDTH" maxWidth="$DEVICE_COMBO_WIDTH"
+                      minHeight="$DEVICE_COMBO_HEIGHT" maxHeight="$DEVICE_COMBO_HEIGHT"
+                      prefHeight="$DEVICE_COMBO_HEIGHT"
+                      GridPane.rowIndex="0" GridPane.columnIndex="3">
+                <GridPane.margin>
+                    <Insets top="4.0" right="10.0" bottom="0.0" left="0.0"/>
+                </GridPane.margin>
+            </ComboBox>
+            <Button fx:id="exitClientButton"
+                    text="Shutdown" onAction="#shutdown"
+                    minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" maxWidth="$BTN_WIDTH"
+                    minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT"
+                    GridPane.rowIndex="0" GridPane.columnIndex="5">
+                <GridPane.margin>
+                    <Insets top="4" right="10.0" bottom="0.0" left="0.0"/>
+                </GridPane.margin>
+            </Button>
+
+
+            <!-- row 2    -->
+
+            <TextField fx:id="filterField" promptText="Enter Filter Text" minWidth="$FILTER_FIELD_WIDTH"
+                       prefWidth="$FILTER_FIELD_WIDTH" maxWidth="$FILTER_FIELD_WIDTH"
+                       minHeight="$FILTER_FIELD_HEIGHT" maxHeight="$FILTER_FIELD_HEIGHT"
+                       GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                <GridPane.margin>
+                    <Insets top="4.0" right="0.0" bottom="10.0" left="0.0"/>
+                </GridPane.margin>
+            </TextField>
+            <Button text="Set Filter" onAction="#setFilter" alignment="TOP_LEFT"
+                    minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT"
+                    GridPane.rowIndex="1" GridPane.columnIndex="2"  >
+                <GridPane.margin>
+                    <Insets top="4.0" right="4.0" bottom="4.0" left="10.0"/>
+                </GridPane.margin>
+            </Button>
+
+            <Label fx:id="filterDisplay" text="Filter" alignment="TOP_LEFT"
+                   minWidth="$FILTER_FIELD_WIDTH" prefWidth="$FILTER_FIELD_WIDTH" minHeight="$BTN_HEIGHT"
+                   maxHeight="$BTN_HEIGHT"
+                   GridPane.rowIndex="1" GridPane.columnIndex="3"  GridPane.columnSpan="2">
+                <GridPane.margin>
+                    <Insets top="4.0" right="4.0" bottom="4.0" left="0.0"/>
+                </GridPane.margin>
+            </Label>
+            <ComboBox fx:id="selectLogLevel" promptText="Level"
+                      minWidth="$LOG_LEVEL_COMBO_WIDTH"
+                      prefWidth="$LOG_LEVEL_COMBO_WIDTH" maxWidth="$LOG_LEVEL_COMBO_WIDTH"
+                      minHeight="$DEVICE_COMBO_HEIGHT" maxHeight="$DEVICE_COMBO_HEIGHT"
+                      prefHeight="$DEVICE_COMBO_HEIGHT"
+                      GridPane.rowIndex="1" GridPane.columnIndex="5">
+                <GridPane.margin>
+                    <Insets top="4.0" right="10.0" bottom="0.0" left="0.0"/>
+                </GridPane.margin>
+            </ComboBox>
+
+
+
+            <!-- constraints -->
+            <columnConstraints>
+                <ColumnConstraints fillWidth="true" maxWidth="${mainContainer.width/6}"
+                                   minWidth="${mainContainer.width/6}"
+                                   prefWidth="${mainContainer.width/6}" halignment="LEFT"/>
+                <ColumnConstraints fillWidth="true" maxWidth="${mainContainer.width/6}"
+                                   minWidth="${mainContainer.width/6}"
+                                   prefWidth="${mainContainer.width/6}" halignment="LEFT"/>
+                <ColumnConstraints fillWidth="true" maxWidth="${mainContainer.width/6}"
+                                   minWidth="${mainContainer.width/6}"
+                                   prefWidth="${mainContainer.width/6}" halignment="LEFT"/>
+                <ColumnConstraints fillWidth="true" maxWidth="${mainContainer.width/6}"
+                                   minWidth="${mainContainer.width/6}"
+                                   prefWidth="${mainContainer.width/6}" halignment="LEFT"/>
+                <ColumnConstraints fillWidth="true" maxWidth="${mainContainer.width/6}"
+                                   minWidth="${mainContainer.width/6}"
+                                   prefWidth="${mainContainer.width/6}" halignment="LEFT"/>
+                <ColumnConstraints fillWidth="true" maxWidth="${mainContainer.width/6}"
+                                   minWidth="${mainContainer.width/6}"
+                                   prefWidth="${mainContainer.width/6}" halignment="LEFT"/>
+
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="$HEADER_ROW_HEIGHT" vgrow="NEVER" valignment="TOP"
+                                maxHeight="$HEADER_ROW_HEIGHT"/>
+                <RowConstraints minHeight="$HEADER_ROW_HEIGHT" vgrow="NEVER" valignment="CENTER"
+                                maxHeight="$HEADER_ROW_HEIGHT"/>
+            </rowConstraints>
             <HBox.margin>
-                <Insets top="10.0" right="10.0" bottom="10.0" left="40.0" />
+                <Insets top="2.0" right="0.0" bottom="0.0" left="10.0"/>
             </HBox.margin>
-        </Label>
-        <TextField fx:id="filterField" promptText="Filter" minWidth="$FILTER_FIELD_WIDTH" prefWidth="$FILTER_FIELD_WIDTH" maxWidth="$FILTER_FIELD_WIDTH"
-                   minHeight="$FILTER_FIELD_HEIGHT" maxHeight="$FILTER_FIELD_HEIGHT" >
-            <HBox.margin>
-                <Insets top="10.0" right="0.0" bottom="10.0" left="10.0" />
-            </HBox.margin>
-        </TextField>
-        <Button text="Set Filter" onAction="#setFilter" alignment="TOP_LEFT"
-                minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT">
-            <HBox.margin>
-                <Insets top="10.0" right="4.0" bottom="4.0" left="10.0"/>
-            </HBox.margin>
-        </Button>
-        <Button text="Stop" onAction="#stopLogCat" alignment="TOP_LEFT"
-                minWidth="$SMALL_BTN_WIDTH" prefWidth="$SMALL_BTN_WIDTH" minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT">
-            <HBox.margin>
-                <Insets top="10.0" right="4.0" bottom="4.0" left="10.0"/>
-            </HBox.margin>
-        </Button>
-        <Button text="ReStart" onAction="#restartLogCat" alignment="TOP_LEFT"
-                minWidth="$SMALL_BTN_WIDTH" prefWidth="$SMALL_BTN_WIDTH" minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT">
-            <HBox.margin>
-                <Insets top="10.0" right="4.0" bottom="4.0" left="10.0"/>
-            </HBox.margin>
-        </Button>
-        <Label fx:id="filterDisplay" text="Filter"  alignment="TOP_LEFT"
-                minWidth="$FILTER_FIELD_WIDTH" prefWidth="$FILTER_FIELD_WIDTH" minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT">
-            <HBox.margin>
-                <Insets top="10.0" right="4.0" bottom="4.0" left="10.0"/>
-            </HBox.margin>
-        </Label>
-        <ComboBox fx:id="selectLogLevel"  promptText="Level"
-                  minWidth="$LOG_LEVEL_COMBO_WIDTH"
-                  prefWidth="$LOG_LEVEL_COMBO_WIDTH" maxWidth="$LOG_LEVEL_COMBO_WIDTH"
-                  minHeight="$DEVICE_COMBO_HEIGHT" maxHeight="$DEVICE_COMBO_HEIGHT"
-                  prefHeight="$DEVICE_COMBO_HEIGHT">
-            <HBox.margin>
-                <Insets top="10.0" right="20.0" bottom="0.0" left="10.0"/>
-            </HBox.margin>
-        </ComboBox>
-        <Region HBox.hgrow="ALWAYS"/>
-        <ComboBox fx:id="selectDeviceCombo"  promptText="Select Device"
-                  minWidth="$DEVICE_COMBO_WIDTH"
-                  prefWidth="$DEVICE_COMBO_WIDTH" maxWidth="$DEVICE_COMBO_WIDTH"
-                  minHeight="$DEVICE_COMBO_HEIGHT" maxHeight="$DEVICE_COMBO_HEIGHT"
-                  prefHeight="$DEVICE_COMBO_HEIGHT">
-            <HBox.margin>
-                <Insets top="10.0" right="20.0" bottom="0.0" left="10.0"/>
-            </HBox.margin>
-        </ComboBox>
-        <Button fx:id="exitClientButton"
-                text="Shutdown" onAction="#shutdown"
-                minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" maxWidth="$BTN_WIDTH"
-                minHeight="$BTN_HEIGHT" maxHeight="$BTN_HEIGHT">
-            <HBox.margin>
-                <Insets top="10" right="20.0" bottom="0.0" left="10.0"/>
-            </HBox.margin>
-        </Button>
+        </GridPane>
+
 
         <VBox.margin>
             <Insets top="20.0" right="4.0" bottom="4.0" left="0.0"/>
         </VBox.margin>
     </HBox>
 
-    <VBox prefHeight="${mainContainer.height/1.1}" prefWidth="${mainContainer.width/1.1}" >
-        <TabPane fx:id="tabPane" prefHeight="-1" prefWidth="-1" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" />
+    <VBox prefHeight="${mainContainer.height/1.1}" prefWidth="${mainContainer.width/1.1}">
+        <TabPane fx:id="tabPane" prefHeight="-1" prefWidth="-1" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS"/>
     </VBox>
 
 

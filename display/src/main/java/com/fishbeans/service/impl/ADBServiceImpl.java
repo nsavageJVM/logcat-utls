@@ -221,9 +221,11 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
                     }
 
                     if(!filter.equals(ADB_COMMANDS.SET_NO_FILTER.name())) {
-                        toPrint = toPrint.stream() .filter(line -> line.getMssg().getMessage().contains(filter)).collect(Collectors.toList());
+                        System.out.println("running filter "+filter);
+                        List<LogCatDTO>   filtered  = toPrint.stream() .filter(line -> line.getMssg().getMessage().contains(filter)).collect(Collectors.toList());
+                        return filtered;
                     }
-
+                    System.out.println("returning  no  filter "+filter);
                     return toPrint;
                 }
             };
