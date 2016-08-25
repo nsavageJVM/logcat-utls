@@ -50,14 +50,20 @@ dependencies {
 
 task  deployArtifact (type: Copy, dependsOn: 'bootRepackage') {
 
-    File deployFolder = new File(project.projectDir, "artifacts")
-    File targetFolder = new File(project.projectDir, "build/libs/adb-utils-0.0.1.jar")
+    File deployFolder = new File(project.parent.projectDir, "artifacts")
+    File targetFolder = new File(project.parent.projectDir, "display/build/libs/adb-utils-0.0.1.jar")
+
+
+    if(deployFolder.exists()) {
+        deployFolder.delete()
+    }
+    deployFolder.mkdir()
 
     println("deployFolder = ${deployFolder.absolutePath}")
     println("targetFolder = ${targetFolder.absolutePath}")
 
-    from targetFolder
-    into deployFolder
+    from(targetFolder)
+    into (deployFolder)
 
 
 }
@@ -67,7 +73,7 @@ task runADBUtils(type: Exec) {
 
     doFirst {
         println "Starting ADBUtils..."
-        File workingDir = new File(project.projectDir, "artifacts")
+        File workingDir = new File(project.parent.projectDir, "artifacts")
         println "RUNNING IN  workingDir : ${workingDir}"
 
         commandLine   "java", "-jar", "${workingDir}/adb-utils-0.0.1.jar"
