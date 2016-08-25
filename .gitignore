@@ -19,9 +19,7 @@ alogs
 # gradle specific
 .gradle/
 **/build
-**/gradle/
-**/gradlew
-**/gradlew.bat
+
 
 
 

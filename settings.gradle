@@ -1,4 +1,3 @@
-rootProject.name = 'adb-utils'
 include 'as-includes', 'richtextfx',  'display'
 
 
