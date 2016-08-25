@@ -1,0 +1,85 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+mainClassName = "com.fishbeans.EntryPoint"
+
+buildscript {
+    ext {
+        springBootVersion = '1.3.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+
+    }
+}
+
+jar {
+    baseName = 'adb-utils'
+    version = '0.0.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+
+    compile(project(':as-includes')) {
+        // exclusde here like below
+//        exclude group: 'com.google.common'
+//        exclude group: 'com.google.guava' , module: 'guava'
+    }
+
+    compile(project(':richtextfx')) { }
+
+
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.projectlombok:lombok:1.16.10')
+    runtime('com.h2database:h2')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+}
+
+task  deployArtifact (type: Copy, dependsOn: 'bootRepackage') {
+
+    File deployFolder = new File(project.projectDir, "artifacts")
+    File targetFolder = new File(project.projectDir, "build/libs/adb-utils-0.0.1.jar")
+
+    println("deployFolder = ${deployFolder.absolutePath}")
+    println("targetFolder = ${targetFolder.absolutePath}")
+
+    from targetFolder
+    into deployFolder
+
+
+}
+
+
+task runADBUtils(type: Exec) {
+
+    doFirst {
+        println "Starting ADBUtils..."
+        File workingDir = new File(project.projectDir, "artifacts")
+        println "RUNNING IN  workingDir : ${workingDir}"
+
+        commandLine   "java", "-jar", "${workingDir}/adb-utils-0.0.1.jar"
+    }
+}
+
+
+
+task "create-dirs" << {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+
+

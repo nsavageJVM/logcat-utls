@@ -1,0 +1,25 @@
+.button {
+    -fx-font-weight: bold;
+}
+
+.terminal {
+    -fx-font-family: 'monospace';
+    -fx-font-size: 14px;
+    -fx-text-fill: yellow;
+    -fx-font-weight: bold;
+    -fx-background-color: black;
+}
+
+
+.text-field {
+    -fx-font-size: 14px;
+    -fx-font-family: Monospaced;
+    -fx-text-fill: yellow;
+    -fx-font-weight: bold;
+    -fx-background-color: black;
+}
+
+.tab-pane {
+    -fx-open-tab-animation: NONE;
+    -fx-close-tab-animation: NONE;
+}
