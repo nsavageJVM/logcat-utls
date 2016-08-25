@@ -82,6 +82,7 @@ public class ADBServiceImpl implements ADBService {
     }
     //</editor-fold>
 
+    //<editor-fold desc="== start / stop ADBServer ==" >
     @Override
     public void startADBServer() {
         runProcessCmd(ADB_COMMANDS.START_ADB_SERVER.getCommand());
@@ -92,9 +93,9 @@ public class ADBServiceImpl implements ADBService {
     public void stopADBServer() {
         runProcessCmd(ADB_COMMANDS.STOP_ADB_SERVER.getCommand());
     }
+    //</editor-fold>
 
-
-    //<editor-fold desc="==  uses scheduled service for stream ==" >
+    //<editor-fold desc="==  runLogCatScheduledService uses scheduled services for stream ==" >
     @Override
     public void runLogCatScheduledService(InlineCssTextArea terminalOutput) {
         StringJoiner logger = new StringJoiner("");
@@ -178,8 +179,9 @@ public class ADBServiceImpl implements ADBService {
         sink.start();
 
     }
+    //</editor-fold>
 
-
+    //<editor-fold desc="== start / stop stream ==" >
    public void  stopLogStream() {
        sink.cancel();
     }
@@ -188,15 +190,16 @@ public class ADBServiceImpl implements ADBService {
         sink.reset();
         sink.start();
     }
+    //</editor-fold>
 
-
+    //<editor-fold desc="== setFilter ==" >
     @Override
     public void setFilter(String filterText) {
         filter = filterText;
     }
     //</editor-fold>
 
-    //<editor-fold desc="== scheduled service for stream depends on runLogCatScheduledService ==" >
+    //<editor-fold desc="== scheduled services for stream ==" >
     private class LogStreamSink extends ScheduledService<List<LogCatDTO>> {
 
 
@@ -263,30 +266,24 @@ public class ADBServiceImpl implements ADBService {
         }
 
         ByteBuffer buf = ByteBuffer.wrap(setDeviceRequest, 0, setDeviceRequest.length);
-        int count = 0;
         while (buf.position() != buf.limit()) {
 
             try {
-                count = sock.write(buf);
+               sock.write(buf);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        // http://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
-        logger.add(TAG).add(String.format("setDevice first count %s%n", count));
 
-        count = 0;
         byte[] data = new byte[16384];
         ByteBuffer buf1 = ByteBuffer.wrap(data);
         try {
-            count = sock.read(buf1);
+                sock.read(buf1);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        logger.add(TAG).add(String.format("setDevice second count %s%n", count));
-        logger.add(TAG).add(String.format("setDevice result %s%n", new String(data)));
-
+        logger.add(TAG).add(String.format(" setDevice result %s%n", new String(data)));
 
         return logger.toString();
     }
