@@ -1,5 +1,6 @@
 package com.fishbeans.app.ui.controllers;
 
+import com.android.ddmlib.LogLevel;
 import com.fishbeans.app.ui.controllers.view.components.TerminalView;
 import com.fishbeans.service.ADBService;
 import com.fishbeans.util.LogLineColor;
@@ -46,6 +47,9 @@ public class BasePanelController implements ViewController {
     @FXML
     private ComboBox<UsbDevice> selectDeviceCombo;
 
+    @FXML
+    private ComboBox<String> selectLogLevel;
+
 
     @Autowired
     private ADBService adbService;
@@ -70,6 +74,11 @@ public class BasePanelController implements ViewController {
         terminalOutput=  terminal.getOutput();
         terminalOutput.getStyleClass().add("terminal");
         terminalOutputScrollPane = terminal.getScrollPane();
+        ObservableList<String> levels = FXCollections.observableArrayList();
+        for(LogLevel l :LogLevel.values()) {
+            levels.add(l.getStringValue());
+        }
+        selectLogLevel.setItems(levels);
 
         List<UsbDevice> deviceResult = adbService.getDevices();
         ObservableList<UsbDevice> values = FXCollections.observableArrayList();
@@ -83,6 +92,19 @@ public class BasePanelController implements ViewController {
             Thread.sleep(500); } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        selectLogLevel.valueProperty().addListener(new ChangeListener<String>() {
+
+            @Override
+            public void changed(ObservableValue ov, String oldLevel, String newLevel) {
+                adbService.setIsLogLevelFilter(true);
+                System.out.println(newLevel);
+                adbService.setLogLevelString(newLevel);
+
+            }
+        });
+
+
+
 
         //<editor-fold defaultstate="collapsed" desc="== combo  action ==">
         selectDeviceCombo.valueProperty().addListener(new ChangeListener<UsbDevice>() {

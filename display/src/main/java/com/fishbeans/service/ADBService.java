@@ -19,11 +19,12 @@ public interface ADBService {
     void  stopLogStream();
     void  startLogStream();
 
+    void setIsLogLevelFilter(boolean isLogLevelFiter);
+    void setLogLevelString(String logLevelString);
 
     String setDevice(boolean isDefault, String deviceId);
     List<UsbDevice> getDevices();
     void runLogCatScheduledService(InlineCssTextArea terminalOutput);
-
 
     void setFilter(String filterText);
 }

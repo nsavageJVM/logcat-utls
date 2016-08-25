@@ -1,5 +1,6 @@
 package com.fishbeans.service.impl;
 
+import com.fishbeans.ConfigTrait;
 import com.fishbeans.producer.ADBProducer;
 import com.fishbeans.service.ADBService;
 import com.fishbeans.stream.LogCatDTO;
@@ -38,11 +39,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ADBServiceImpl implements ADBService {
+public class ADBServiceImpl implements ADBService, ConfigTrait {
 
-    private static final String baseStoragePath = System.getProperty("user.dir");
-    private static final String outFilePath = "/alogs/";
+
+
     private static Path localFilePath;
+
+    private  boolean  isLogLevelFilter;
+
+    private  String logLevelString = "info";
 
     @Value("${adb.device}")
     private String device;
@@ -58,7 +63,7 @@ public class ADBServiceImpl implements ADBService {
     private final StreamReceiver logStreamReciever;
     private SocketChannel sock;
     private static final String TAG = ADBServiceImpl.class.getSimpleName();
-    private String adb_home;
+    private static String adb_home;
 
     private LogStreamSink sink;
 
@@ -69,12 +74,11 @@ public class ADBServiceImpl implements ADBService {
 
         localFilePath =    Paths.get(baseStoragePath, outFilePath );
 
-        adb_home = System.getenv("ANDROID_HOME");
-        if (adb_home == null || adb_home.equals("")) {
-            adb_home = ADB_EXECUTABLE_PATH;
+        if (android_home() == null || android_home().equals("")) {
+            adb_home = ADB_EXECUTABLE_PATH + adb_relative_path;
+        } else {
+            adb_home = android_home() + adb_relative_path;
         }
-
-        adb_home = adb_home + "/platform-tools/adb";
 
         runProcessCmd(ADB_COMMANDS.START_ADB_SERVER.getCommand());
 
@@ -210,10 +214,14 @@ public class ADBServiceImpl implements ADBService {
 
                     List<LogCatDTO> toPrint = null;
                     List<LogCatDTO> results =  logStreamReciever.getStreamSink();
-                    if(filter.equals(ADB_COMMANDS.SET_NO_FILTER.name())) {
-                       toPrint = results.stream() .collect(Collectors.toList());
+                    if(isLogLevelFilter) {
+                        toPrint = results.stream() .filter(line -> line.getMssg().getLogLevel().getStringValue().equals(logLevelString)).collect(Collectors.toList());
                     } else {
-                        toPrint = results.stream() .filter(line -> line.getMssg().getMessage().contains(filter)).collect(Collectors.toList());
+                        toPrint = results.stream() .collect(Collectors.toList());
+                    }
+
+                    if(!filter.equals(ADB_COMMANDS.SET_NO_FILTER.name())) {
+                        toPrint = toPrint.stream() .filter(line -> line.getMssg().getMessage().contains(filter)).collect(Collectors.toList());
                     }
 
                     return toPrint;
@@ -320,7 +328,18 @@ public class ADBServiceImpl implements ADBService {
         return parseDevices(body);
     }
 
+    @Override
+    public  void setIsLogLevelFilter(boolean isLogLevelFiter) {
+       this.isLogLevelFilter = isLogLevelFiter;
+    }
 
+    @Override
+    public  void setLogLevelString(String logLevelString) {
+        this.logLevelString = logLevelString;
+    }
+
+
+    //== private methods
     private List<UsbDevice> parseDevices(String body) {
         String[] lines = body.split("\n");
         ArrayList<UsbDevice> devices = new ArrayList<UsbDevice>(lines.length);
@@ -333,8 +352,6 @@ public class ADBServiceImpl implements ADBService {
         return devices;
     }
 
-
-
     private void runProcessCmd(String cmd) {
 
         try {
@@ -346,6 +363,11 @@ public class ADBServiceImpl implements ADBService {
             e.printStackTrace();
         }
     }
+
+    private String android_home() { return System.getenv("ANDROID_HOME"); }
+
+
+
 
 
 }
