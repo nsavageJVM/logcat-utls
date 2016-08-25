@@ -1,0 +1,27 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Java template
+*.class
+
+**/artifacts/
+
+
+# Package Files #
+*.jar
+
+*.log
+alogs
+
+# main git ignore file
+# idea specific
+**/.idea/
+**/*.iml
+
+# gradle specific
+.gradle/
+**/build
+**/gradle/
+**/gradlew
+**/gradlew.bat
+
+
+
