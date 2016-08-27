@@ -3,6 +3,7 @@ package com.fishbeans.app.ui.controllers;
 import com.android.ddmlib.LogLevel;
 import com.fishbeans.app.ui.controllers.view.components.TerminalView;
 import com.fishbeans.service.ADBService;
+import com.fishbeans.util.ADB_COMMANDS;
 import com.fishbeans.util.LogLineColor;
 import com.fishbeans.util.UsbDevice;
 import javafx.application.Platform;
@@ -158,5 +159,16 @@ public class BasePanelController implements ViewController {
 
     public void restartLogCat(ActionEvent actionEvent) {
         adbService.startLogStream();
+    }
+
+    public void clearLogCat(ActionEvent actionEvent) {
+
+        terminalOutput.replaceText("");
+
+    }
+
+    public void clearFilter(ActionEvent actionEvent) {
+        adbService.setFilter(ADB_COMMANDS.SET_NO_FILTER.name());
+        filterDisplay.setText(String.format(DEFAULT_FILTER_TEST, filter.equals(ADB_COMMANDS.SET_NO_FILTER.name())));
     }
 }

@@ -58,14 +58,20 @@
                     <Insets top="4.0" right="4.0" bottom="4.0" left="10.0"/>
                 </GridPane.margin>
             </Button>
-
+            <Button text="Clear Logcat" onAction="#clearLogCat" alignment="TOP_LEFT"
+                    minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT"
+                    maxHeight="$BTN_HEIGHT"  GridPane.rowIndex="0" GridPane.columnIndex="3">
+                <GridPane.margin>
+                    <Insets top="4.0" right="4.0" bottom="3.0" left="10.0"/>
+                </GridPane.margin>
+            </Button>
 
             <ComboBox fx:id="selectDeviceCombo" promptText="Select Device"
                       minWidth="$DEVICE_COMBO_WIDTH"
                       prefWidth="$DEVICE_COMBO_WIDTH" maxWidth="$DEVICE_COMBO_WIDTH"
                       minHeight="$DEVICE_COMBO_HEIGHT" maxHeight="$DEVICE_COMBO_HEIGHT"
                       prefHeight="$DEVICE_COMBO_HEIGHT"
-                      GridPane.rowIndex="0" GridPane.columnIndex="3">
+                      GridPane.rowIndex="0" GridPane.columnIndex="4">
                 <GridPane.margin>
                     <Insets top="4.0" right="10.0" bottom="0.0" left="0.0"/>
                 </GridPane.margin>
@@ -99,10 +105,18 @@
                 </GridPane.margin>
             </Button>
 
+            <Button text="Clear Filter" onAction="#clearFilter" alignment="TOP_LEFT"
+                    minWidth="$BTN_WIDTH" prefWidth="$BTN_WIDTH" minHeight="$BTN_HEIGHT"
+                    maxHeight="$BTN_HEIGHT"  GridPane.rowIndex="1" GridPane.columnIndex="3">
+                <GridPane.margin>
+                    <Insets top="4.0" right="4.0" bottom="3.0" left="10.0"/>
+                </GridPane.margin>
+            </Button>
+
             <Label fx:id="filterDisplay" text="Filter" alignment="TOP_LEFT"
                    minWidth="$FILTER_FIELD_WIDTH" prefWidth="$FILTER_FIELD_WIDTH" minHeight="$BTN_HEIGHT"
                    maxHeight="$BTN_HEIGHT"
-                   GridPane.rowIndex="1" GridPane.columnIndex="3"  GridPane.columnSpan="2">
+                   GridPane.rowIndex="1" GridPane.columnIndex="4">
                 <GridPane.margin>
                     <Insets top="4.0" right="4.0" bottom="4.0" left="0.0"/>
                 </GridPane.margin>

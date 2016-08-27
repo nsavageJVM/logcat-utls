@@ -66,6 +66,7 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
     private static String adb_home;
 
     private LogStreamSink sink;
+    private LogStreamService stream;
 
     //<editor-fold desc="==  init ==" >
     @PostConstruct
@@ -125,10 +126,10 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
 
         byte[] logData = new byte[16384];
         ByteBuffer buffer = ByteBuffer.wrap(logData);
-        LogStreamService stream = new LogStreamService();
+        stream = new LogStreamService();
         stream.setBuffer(buffer);
         stream.setSocketChannel(sock);
-        stream.setPeriod(Duration.millis(200));
+        stream.setPeriod(Duration.millis(500));
         stream.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
             @Override
@@ -144,7 +145,7 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
         stream.start();
 
         sink = new LogStreamSink();
-        sink.setPeriod(Duration.millis(200));
+        sink.setPeriod(Duration.millis(500));
         sink.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
             @Override
@@ -201,6 +202,11 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
     public void setFilter(String filterText) {
         filter = filterText;
     }
+
+    @Override
+    public void clearBuffer() {
+        stream.clearBuffer();
+    }
     //</editor-fold>
 
     //<editor-fold desc="== scheduled services for stream ==" >
@@ -221,16 +227,13 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
                     }
 
                     if(!filter.equals(ADB_COMMANDS.SET_NO_FILTER.name())) {
-                        System.out.println("running filter "+filter);
                         List<LogCatDTO>   filtered  = toPrint.stream() .filter(line -> line.getMssg().getMessage().contains(filter)).collect(Collectors.toList());
                         return filtered;
                     }
-                    System.out.println("returning  no  filter "+filter);
+
                     return toPrint;
                 }
             };
-
-
         }
     }
 
@@ -242,7 +245,9 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
         public final void setBuffer(ByteBuffer value) {
             buffer = value;
         }
-
+        public final void clearBuffer() {
+            buffer.clear();
+        }
         public final void setSocketChannel(SocketChannel value) {
             sock = value;
         }

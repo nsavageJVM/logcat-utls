@@ -27,4 +27,5 @@ public interface ADBService {
     void runLogCatScheduledService(InlineCssTextArea terminalOutput);
 
     void setFilter(String filterText);
+    void clearBuffer();
 }
