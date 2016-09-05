@@ -33,6 +33,8 @@ public class BasePanelController implements ViewController {
 
     private static final String DEFAULT_FILTER_TEST = "Current Filter %s";
 
+    private static final String TAG = "BasePanelController ";
+
     @FXML
     private VBox mainContainer;
 
@@ -113,6 +115,7 @@ public class BasePanelController implements ViewController {
             @Override
             public void changed(ObservableValue ov, UsbDevice oldDevice, UsbDevice newDevice) {
             String result = adbService.setDevice(false, newDevice.getSerial());
+            System.out.println(TAG+ "debug set device "+result);
             terminalOutput.appendText(result);
                 terminalOutput.setStyle(0, result.length()-1, String.format("-fx-fill:%s;", LogLineColor.WARN.getColorAsString() ));
             }
