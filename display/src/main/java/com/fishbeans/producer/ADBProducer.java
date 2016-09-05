@@ -20,14 +20,14 @@ import java.nio.channels.SocketChannel;
 public class ADBProducer implements ConfigTrait {
 
 
-
+    // SocketChannel is a non-blocking socket
     public SocketChannel getADBSocket() {
         SocketChannel soc = null;
         try {
             InetAddress adbINETSocket = InetAddress.getByName(DEFAULT_ADB_HOST);
             InetSocketAddress sSocketAddr = new InetSocketAddress(adbINETSocket, DEFAULT_ADB_PORT);
             soc = SocketChannel.open(sSocketAddr);
-            soc.configureBlocking(true);
+            soc.configureBlocking(false);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {

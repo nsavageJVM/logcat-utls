@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -104,7 +105,10 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
     @Override
     public void runLogCatScheduledService(InlineCssTextArea terminalOutput) {
         StringJoiner logger = new StringJoiner("");
-        terminalOutput.replaceText("" );
+        if(!Objects.isNull(terminalOutput)) {
+            terminalOutput.replaceText("" );
+        }
+
 
         byte[]  setLogCatRequest = adbProducer.getRequestAsProtocolBytes(ADB_COMMANDS.LOGCAT_CMD.getCommand());
         System.out.println(new String(setLogCatRequest));
@@ -188,12 +192,17 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
 
     //<editor-fold desc="== start / stop stream ==" >
    public void  stopLogStream() {
-       sink.cancel();
+       if(!Objects.isNull(sink)) {
+           sink.cancel();
+       }
+
     }
 
     public void  startLogStream() {
-        sink.reset();
-        sink.start();
+        if(!Objects.isNull(sink)) {
+            sink.reset();
+            sink.start();
+        }
     }
     //</editor-fold>
 

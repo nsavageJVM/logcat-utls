@@ -1,0 +1,3 @@
+http://crunchify.com/java-nio-non-blocking-io-with-server-client-example-java-nio-bytebuffer-and-channels-selector-java-nio-vs-io/
+
+https://www.lightbend.com/blog/reactive-revealed-part-1-of-3-async-nio-back-pressure-and-the-message-driven-vs-event-driven-approach

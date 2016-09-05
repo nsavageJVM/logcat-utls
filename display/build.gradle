@@ -62,7 +62,9 @@ task  deployArtifact (type: Copy, dependsOn: 'bootRepackage') {
 
     from(targetFolder)
     into (deployFolder)
-
+    rename { filename ->
+        filename.replace 'adb-utils-0.0.1', 'adb-util'
+    }
 
 }
 
@@ -74,7 +76,7 @@ task runADBUtils(type: Exec) {
         File workingDir = new File(project.parent.projectDir, "artifacts")
         println "RUNNING IN  workingDir : ${workingDir}"
 
-        commandLine   "java", "-jar", "${workingDir}/adb-utils-0.0.1.jar"
+        commandLine   "java", "-jar", "${workingDir}/adb-util.jar"
     }
 }
 

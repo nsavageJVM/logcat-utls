@@ -114,7 +114,7 @@ public class BasePanelController implements ViewController {
             public void changed(ObservableValue ov, UsbDevice oldDevice, UsbDevice newDevice) {
             String result = adbService.setDevice(false, newDevice.getSerial());
             terminalOutput.appendText(result);
-                terminalOutput.setStyle(0, result.length(), String.format("-fx-fill:%s;", LogLineColor.WARN.getColorAsString() ));
+                terminalOutput.setStyle(0, result.length()-1, String.format("-fx-fill:%s;", LogLineColor.WARN.getColorAsString() ));
             }
         });
         //</editor-fold>
