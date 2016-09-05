@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ADBServiceImpl implements ADBService, ConfigTrait {
 
-
+    public boolean logThreads = false;
 
     private static Path localFilePath;
 
@@ -104,7 +104,7 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
     //<editor-fold desc="==  runLogCatScheduledService uses scheduled services for stream ==" >
     @Override
     public void runLogCatScheduledService(InlineCssTextArea terminalOutput) {
-        StringJoiner logger = new StringJoiner("");
+        StringBuffer logger = new StringBuffer("");
         if(!Objects.isNull(terminalOutput)) {
             terminalOutput.replaceText("" );
         }
@@ -124,16 +124,19 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
                 e.printStackTrace();
             }
         }
-        logger.add(TAG).add(String.format("runLogCatScheduledService first count %s%n", count));
+        if(logThreads) {
+            logger.append(TAG).append(String.format(" runLogCatScheduledService first count %s%n", count));
+            System.out.println(logger);
+            logger.setLength(0);
+        }
 
-        count = 0;
 
-        byte[] logData = new byte[16384];
+        byte[] logData = new byte[130712];
         ByteBuffer buffer = ByteBuffer.wrap(logData);
         stream = new LogStreamService();
         stream.setBuffer(buffer);
         stream.setSocketChannel(sock);
-        stream.setPeriod(Duration.millis(500));
+        stream.setPeriod(Duration.millis(1000));
         stream.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
             @Override
@@ -142,14 +145,23 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
                 byte[] data = ((ByteBuffer) t.getSource().getValue()).array();
                 int offset = ((ByteBuffer) t.getSource().getValue()).arrayOffset();
                 int posn = ((ByteBuffer) t.getSource().getValue()).position();
+                if(logThreads) {
+                    logger
+                            .append(TAG)
+                            .append(String.format(
+                                    " LogStreamService to reciever  data %s offset %s posn %s%n", data.length, offset, posn));
+                    System.out.println(logger);
+                }
 
                 logStreamReciever.addOutput(data, offset, posn);
+                buffer.clear();
+
             }
         });
         stream.start();
 
         sink = new LogStreamSink();
-        sink.setPeriod(Duration.millis(500));
+        sink.setPeriod(Duration.millis(1000));
         sink.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
             @Override
@@ -165,23 +177,23 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
                         terminalOutput.setStyle(counter, line.length()+ counter , String.format("-fx-fill:%s;", dto.getLineDisplayColor()));
                         counter = counter + line.length();
                     }
+                    toPrint.clear();
 
                 } else {
 
-                    StringJoiner logger = new StringJoiner("");
+                    StringJoiner fileLogger = new StringJoiner("");
 
                     for (LogCatDTO dto : toPrint) {
-                        logger.add(dto.prettyPrint());
+                        fileLogger.add(dto.prettyPrint());
 
                     }
-                    String outData = logger.toString();
+                    String outData = fileLogger.toString();
                     try (BufferedWriter writer = Files.newBufferedWriter(localFilePath)) {
                         writer.write(outData);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-
             }
         });
 
@@ -299,7 +311,7 @@ public class ADBServiceImpl implements ADBService, ConfigTrait {
             }
         }
 
-        byte[] data = new byte[16384];
+        byte[] data = new byte[2048];
         ByteBuffer buf1 = ByteBuffer.wrap(data);
         try {
                 sock.read(buf1);
